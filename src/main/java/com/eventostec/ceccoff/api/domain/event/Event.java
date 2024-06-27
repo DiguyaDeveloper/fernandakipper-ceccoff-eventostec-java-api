@@ -2,6 +2,7 @@ package com.eventostec.ceccoff.api.domain.event;
 
 import com.eventostec.ceccoff.api.domain.address.Address;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,6 +36,7 @@ public class Event {
     private LocalDateTime date;
 
     @OneToOne(mappedBy = "event", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("event")
     private Address address;
 
     @CreatedDate
