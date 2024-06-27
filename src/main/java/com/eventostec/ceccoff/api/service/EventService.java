@@ -1,6 +1,8 @@
 package com.eventostec.ceccoff.api.service;
 
+import com.eventostec.ceccoff.api.domain.coupon.Coupon;
 import com.eventostec.ceccoff.api.domain.event.Event;
+import com.eventostec.ceccoff.api.domain.event.EventDetailsDTO;
 import com.eventostec.ceccoff.api.domain.event.EventRequestDTO;
 import com.eventostec.ceccoff.api.domain.event.EventResponseDTO;
 import com.eventostec.ceccoff.api.repository.EventRepository;
@@ -14,6 +16,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class EventService {
@@ -23,6 +27,9 @@ public class EventService {
 
     @Autowired
     private AddressService addressService;
+
+    @Autowired
+    private CouponService couponService;
 
     @Autowired
     private EventRepository repository;
@@ -88,12 +95,41 @@ public class EventService {
                 .stream().toList();
     }
 
+    public EventDetailsDTO getEventDetailsById(UUID eventId) {
+
+        Event event = repository.findById(eventId)
+                .orElseThrow(() -> new IllegalArgumentException("Event not found"));
+
+        List<Coupon> coupons = couponService.getCouponsOfEvent(eventId, getTodayDate());
+
+        List<EventDetailsDTO.CouponDTO> couponDTOS = coupons.stream()
+                .map(coupon ->
+                    new EventDetailsDTO.CouponDTO(
+                            coupon.getCode(),
+                            coupon.getDiscount(),
+                            coupon.getValid()
+                    )
+                ).toList();
+
+        return new EventDetailsDTO(
+                event.getId(),
+                event.getTitle(),
+                event.getDescription(),
+                event.getDate(),
+                event.getAddress() != null ? event.getAddress().getCity() : "",
+                event.getAddress() != null ? event.getAddress().getUf() : "",
+                event.getImgUrl(),
+                event.getEventUrl(),
+                couponDTOS
+        );
+    }
+
     private LocalDateTime getDateTimeNow() {
         LocalDateTime today = LocalDateTime.now();
         return today.withHour(0).withMinute(0).withSecond(0).withNano(0);
     }
 
-    public static LocalDateTime getEndDate(LocalDate endDate) {
+    public LocalDateTime getEndDate(LocalDate endDate) {
         if (endDate != null) {
             return endDate.atTime(LocalTime.MAX);
         }
@@ -102,11 +138,15 @@ public class EventService {
         return localDate.atTime(LocalTime.MAX);
     }
 
-    public static LocalDateTime getStartDate(LocalDate startDate) {
+    public LocalDateTime getStartDate(LocalDate startDate) {
         if (startDate != null) {
             return startDate.atTime(LocalTime.MIN);
         }
 
+        return getTodayDate();
+    }
+
+    public LocalDateTime getTodayDate() {
         LocalDate localDate = LocalDate.now();
         return localDate.atStartOfDay();
     }
