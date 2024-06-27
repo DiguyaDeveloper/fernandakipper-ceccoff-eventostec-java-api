@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -25,6 +27,21 @@ public class EventController {
         List<EventResponseDTO> allEvents = this.service.getUpcomingEvents(page, size);
 
         return ResponseEntity.ok(allEvents);
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<EventResponseDTO>> getFilteredEvents(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "") String title,
+            @RequestParam(defaultValue = "") String city,
+            @RequestParam(defaultValue = "") String uf,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
+    ) {
+
+        List<EventResponseDTO> events = service.getFilteredEvents(page, size, title, city, uf, startDate, endDate);
+        return ResponseEntity.ok(events);
     }
 
     @PostMapping(consumes = "multipart/form-data")
