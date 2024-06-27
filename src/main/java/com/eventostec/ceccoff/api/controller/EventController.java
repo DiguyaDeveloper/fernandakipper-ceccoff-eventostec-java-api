@@ -1,6 +1,7 @@
 package com.eventostec.ceccoff.api.controller;
 
 import com.eventostec.ceccoff.api.domain.event.Event;
+import com.eventostec.ceccoff.api.domain.event.EventDetailsDTO;
 import com.eventostec.ceccoff.api.domain.event.EventRequestDTO;
 import com.eventostec.ceccoff.api.domain.event.EventResponseDTO;
 import com.eventostec.ceccoff.api.service.EventService;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/event")
@@ -42,6 +44,12 @@ public class EventController {
 
         List<EventResponseDTO> events = service.getFilteredEvents(page, size, title, city, uf, startDate, endDate);
         return ResponseEntity.ok(events);
+    }
+
+    @GetMapping("/{eventId}")
+    public ResponseEntity<EventDetailsDTO> getEventDetail(@PathVariable UUID eventId) {
+        EventDetailsDTO event = service.getEventDetailsById(eventId);
+        return ResponseEntity.ok(event);
     }
 
     @PostMapping(consumes = "multipart/form-data")
