@@ -1,6 +1,5 @@
 package com.eventostec.ceccoff.api.domain.event;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;

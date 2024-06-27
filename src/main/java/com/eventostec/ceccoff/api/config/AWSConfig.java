@@ -16,12 +16,10 @@ public class AWSConfig {
 
     @Bean
     public AmazonS3 createS3Instance() {
-        var connection = AmazonS3ClientBuilder
+        return AmazonS3ClientBuilder
                 .standard()
                 .withCredentials(new DefaultAWSCredentialsProviderChain())
                 .withRegion(awsRegion)
                 .build();
-
-        return connection;
     }
 }
