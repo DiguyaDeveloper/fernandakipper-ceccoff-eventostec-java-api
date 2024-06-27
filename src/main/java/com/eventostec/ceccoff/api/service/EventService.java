@@ -100,14 +100,14 @@ public class EventService {
         Event event = repository.findById(eventId)
                 .orElseThrow(() -> new IllegalArgumentException("Event not found"));
 
-        List<Coupon> coupons = couponService.getCouponsOfEvent(eventId, getTodayDate());
+        List<Coupon> coupons = couponService.getCouponsOfEvent(eventId, LocalDate.now());
 
         List<EventDetailsDTO.CouponDTO> couponDTOS = coupons.stream()
                 .map(coupon ->
                     new EventDetailsDTO.CouponDTO(
                             coupon.getCode(),
                             coupon.getDiscount(),
-                            coupon.getValid()
+                            coupon.getExpireIn()
                     )
                 ).toList();
 

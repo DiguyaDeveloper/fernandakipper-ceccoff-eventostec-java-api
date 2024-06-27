@@ -1,7 +1,7 @@
 package com.eventostec.ceccoff.api.domain.event;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,6 +19,6 @@ public record EventDetailsDTO(
     public record CouponDTO(
             String code,
             Integer discount,
-            Date validUntil) {
+            LocalDate expireIn) {
     }
 }
