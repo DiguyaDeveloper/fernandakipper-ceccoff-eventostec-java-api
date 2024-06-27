@@ -10,6 +10,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
@@ -28,7 +29,8 @@ public class Coupon {
 
     private String code;
     private Integer discount;
-    private Date valid;
+    private LocalDate expireIn;
+    private LocalDate validFrom;
 
     @ManyToOne
     @JoinColumn(name = "event_id")
