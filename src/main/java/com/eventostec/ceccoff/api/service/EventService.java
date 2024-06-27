@@ -10,6 +10,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -45,7 +47,7 @@ public class EventService {
     public List<EventResponseDTO> getUpcomingEvents(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
 
-        Page<Event> eventsPage = this.repository.findUpcomingEvents(new Date(), pageable);
+        Page<Event> eventsPage = this.repository.findUpcomingEvents(getDateNow(), pageable);
 
         return eventsPage.map(event -> new EventResponseDTO(
                 event.getId(),
@@ -60,5 +62,9 @@ public class EventService {
         ).stream().toList();
     }
 
+    private LocalDateTime getDateNow() {
+        LocalDateTime today = LocalDateTime.now();
+        return today.withHour(0).withMinute(0).withSecond(0).withNano(0);
+    }
 
 }
