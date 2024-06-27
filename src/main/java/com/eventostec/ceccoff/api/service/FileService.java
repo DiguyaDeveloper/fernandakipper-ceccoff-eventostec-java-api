@@ -1,8 +1,6 @@
 package com.eventostec.ceccoff.api.service;
 
-import com.amazonaws.services.s3.AmazonS3;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,11 +13,8 @@ import java.util.UUID;
 @Service
 public class FileService {
 
-    @Value("${aws.bucket.name}")
-    private String bucketName;
-
     @Autowired
-    private AmazonS3 s3Client;
+    private S3Service storage;
 
     public String uploadImg(MultipartFile multipartFile) {
         String filename = UUID.randomUUID() + "-" + multipartFile.getOriginalFilename();
@@ -27,10 +22,9 @@ public class FileService {
 
         try {
             file = this.convertMultipartToFile(multipartFile);
-            s3Client.putObject(bucketName, filename, file);
+            var url = storage.upload(file, filename);
             file.deleteOnExit();
-
-            return s3Client.getUrl(bucketName, filename).toString();
+            return url;
         } catch (Exception e) {
             System.out.println("Erro ao subir arquivo");
             assert file != null;
