@@ -33,7 +33,7 @@ public class EventService {
         newEvent.setTitle(request.title());
         newEvent.setDescription(request.description());
         newEvent.setEventUrl(request.eventUrl());
-        newEvent.setDate(new Date(request.date()));
+        newEvent.setDate(request.date());
         newEvent.setImgUrl(imgUrl);
         newEvent.setRemote(request.remote());
 
