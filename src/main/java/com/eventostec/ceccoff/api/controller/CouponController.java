@@ -21,8 +21,8 @@ public class CouponController {
             @PathVariable UUID eventId,
             @RequestBody CouponRequestDTO request
     ) {
-        Coupon coupon = couponService.addCouponToEvent(eventId, request);
+        Coupon coupons = couponService.addCouponToEvent(eventId, request);
 
-        return ResponseEntity.ok(coupon);
+        return ResponseEntity.ok(coupons);
     }
 }
