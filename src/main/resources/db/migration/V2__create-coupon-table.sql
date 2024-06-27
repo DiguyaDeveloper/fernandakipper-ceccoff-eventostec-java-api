@@ -4,5 +4,7 @@ CREATE TABLE coupon (
     discount INTEGER NOT NULL,
     valid TIMESTAMP NOT NULL,
     event_id UUID,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (event_id) REFERENCES event(id) ON DELETE CASCADE
 );
